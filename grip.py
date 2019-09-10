@@ -16,13 +16,12 @@ class GripPipeline:
         self.__blur_type = BlurType.Box_Blur
         self.__blur_radius = 9.009009009009006
 
-        self.__blur_input = None
         self.blur_output = None
 
         self.__hsv_threshold_input = self.blur_output
-        self.__hsv_threshold_hue = [45.32374100719424, 66.3481228668942]
-        self.__hsv_threshold_saturation = [98.60611510791367, 196.2542662116041]
-        self.__hsv_threshold_value = [98.60611510791367, 255.0]
+        self.__hsv_threshold_hue = [19.424460431654676, 43.31058020477816]
+        self.__hsv_threshold_saturation = [64.20863309352518, 248.47269624573377]
+        self.__hsv_threshold_value = [87.14028776978417, 255.0]
 
         self.hsv_threshold_output = None
 
@@ -34,10 +33,10 @@ class GripPipeline:
         self.__filter_contours_contours = self.find_contours_output
         self.__filter_contours_min_area = 50.0
         self.__filter_contours_min_perimeter = 10.0
-        self.__filter_contours_min_width = 100.0
-        self.__filter_contours_max_width = 1000.0
-        self.__filter_contours_min_height = 0.0
-        self.__filter_contours_max_height = 1000.0
+        self.__filter_contours_min_width = 25.0
+        self.__filter_contours_max_width = 350.0
+        self.__filter_contours_min_height = 25.0
+        self.__filter_contours_max_height = 350.0
         self.__filter_contours_solidity = [0, 100]
         self.__filter_contours_max_vertices = 1000000.0
         self.__filter_contours_min_vertices = 0.0
@@ -58,11 +57,13 @@ class GripPipeline:
         self.__hsv_threshold_input = self.blur_output
         (self.hsv_threshold_output) = self.__hsv_threshold(self.__hsv_threshold_input, self.__hsv_threshold_hue,
                                                            self.__hsv_threshold_saturation, self.__hsv_threshold_value)
+
         # Step Find_Contours0:
         self.__find_contours_input = self.hsv_threshold_output
         (self.find_contours_output) = self.__find_contours(self.__find_contours_input,
                                                            self.__find_contours_external_only)
-        # Step Filter_Contours0:q
+
+        # Step Filter_Contours0:
         self.__filter_contours_contours = self.find_contours_output
         (self.filter_contours_output) = self.__filter_contours(self.__filter_contours_contours,
                                                                self.__filter_contours_min_area,
@@ -76,6 +77,7 @@ class GripPipeline:
                                                                self.__filter_contours_min_vertices,
                                                                self.__filter_contours_min_ratio,
                                                                self.__filter_contours_max_ratio)
+
         # if(self.filter_contours_output):
         #     print(self.filter_contours_output[0][0])
         #     print("-------------------------")
