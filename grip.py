@@ -14,7 +14,7 @@ class GripPipeline:
         """
 
         self.__blur_type = BlurType.Box_Blur
-        self.__blur_radius = 9.009009009009006
+        self.__blur_radius = 20.009009009009006
 
         self.blur_output = None
 
@@ -31,7 +31,7 @@ class GripPipeline:
         self.find_contours_output = None
 
         self.__filter_contours_contours = self.find_contours_output
-        self.__filter_contours_min_area = 50.0
+        self.__filter_contours_min_area = 200.0
         self.__filter_contours_min_perimeter = 10.0
         self.__filter_contours_min_width = 25.0
         self.__filter_contours_max_width = 350.0
@@ -78,16 +78,17 @@ class GripPipeline:
                                                                self.__filter_contours_min_ratio,
                                                                self.__filter_contours_max_ratio)
 
-        # if(self.filter_contours_output):
-        #     print(self.filter_contours_output[0][0])
-        #     print("-------------------------")
-        # loop over the contours
+        ret = []
         for c in self.filter_contours_output:
             # compute the center of the contour
             M = cv2.moments(c)
             cX = int(M["m10"] / M["m00"])
             cY = int(M["m01"] / M["m00"])
+            ret.append((cX, cY))
 
+            #print(cX, end='')
+            #print(", ", end='')
+            #print(cY)
             # draw the contour and center of the shape on the image
             cv2.drawContours(self.hsv_threshold_output, [c], -1, (0, 255, 0), 2)
             cv2.circle(self.hsv_threshold_output, (cX, cY), 7, (128, 0, 0), -1)
@@ -96,6 +97,10 @@ class GripPipeline:
 
             # show the image
         cv2.imshow("HSV" , self.hsv_threshold_output)
+
+        return ret
+
+
 
     @staticmethod
     def __blur(src, type, radius):
