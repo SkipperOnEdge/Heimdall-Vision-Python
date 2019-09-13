@@ -9,9 +9,8 @@ cap = cv2.VideoCapture(0)
 grip = GripPipeline()
 
 
-def maps(x, in_min, in_max, out_min, out_max):
-    return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
-
+def maps(old_value, old_min, old_max, new_min, new_max):
+    return ( (old_value - old_min) / (old_max - old_min) ) * (new_max - new_min) + new_min
 
 # VISION LOOP
 while (True):
@@ -22,13 +21,19 @@ while (True):
     # Grip Pipeline
     points = []
     points = grip.process(frame)
+    motorInput = 90;
     if (points):
         if (points[0][0] > 300):
-            print(maps(points[0][0], 0, 300, 90, 180))
-            print("Left")
-        else:
-            print(maps(points[0][0] - 300, 0, 300, 0, 90))
+            temp = (maps(points[0][0] - 300, 0, 300, 90, 180))
+            if(temp > 100):
+                motorInput = temp;
             print("Right")
+        else:
+            temp = (maps(points[0][0] - 300, 0, 300, 0, 90) + 90)
+            if(temp < 80):
+                motorInput = temp;
+            print("Left")
+        print(motorInput);
 
     # Display the resulting frame
     cv2.imshow('frame', frame)
