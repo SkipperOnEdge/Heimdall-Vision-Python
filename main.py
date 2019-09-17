@@ -5,7 +5,7 @@ import numpy as np
 import cv2
 
 # INITIALIZATION
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(1)
 grip = GripPipeline()
 
 ser = Serial("COM4")
@@ -33,14 +33,14 @@ while True:
         if points[0][0] > 320:
             temp = (maps(points[0][0] - 320, 0, 320, 0, 100))
             if temp > 10:
-                motorInput = myround(temp)
+                motorInput = myround(temp) * 2
         else:
             temp = (maps(points[0][0], 0, 320, -100, 0))
             if temp < -10:
-                motorInput = myround(temp)
+                motorInput = myround(temp) * 2
         print(motorInput)
 
-        ser.write(str(40).encode() + b"\n")
+        ser.write(str(70).encode() + b"\n")
         ser.write(str(motorInput).encode() + b"\n")
     else:
         ser.write(str(0).encode() + b"\n")
