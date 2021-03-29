@@ -14,7 +14,7 @@ MarkupSafe==1.1.1
 numpy==1.17.1
 opencv-contrib-python==4.1.1.26
 path-and-address==2.0.1
-Pygments==2.4.2
+Pygments==2.7.4
 pyserial==3.2.1
 PyYAML==5.1.2
 requests==2.22.0
